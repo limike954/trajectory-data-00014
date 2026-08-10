@@ -23,7 +23,7 @@ fastembed = { version = "4.9.1", default-features = false, features = [
     "ort-download-binaries",
     "hf-hub-rustls-tls",
 ] }
-rand = "0.9"
+rand = "0.10"
 # rand 8 for secp256k1
 rand_08 = { package = "rand", version = "0.8" }
 rand_core = "0.9.3"
