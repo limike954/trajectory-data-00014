@@ -1,0 +1,22 @@
+{
+  "name": "@lazai-labs/alith-linux-x64-gnu",
+  "repository": "https://github.com/limike954/trajectory-data-00014",
+  "version": "0.12.3",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "main": "alith.linux-x64-gnu.node",
+  "files": [
+    "alith.linux-x64-gnu.node"
+  ],
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">= 10"
+  },
+  "libc": [
+    "glibc"
+  ]
+}

@@ -1,0 +1,235 @@
+---
+title: "LazAI API"
+description: "How to make inference queries on your contributed private data using LazAI."
+icon: "Cpu"
+---
+
+import { Tabs } from "nextra/components";
+
+
+# LazAI API
+
+One-step access to private data AI process, user can utilize privacy data on the LazAI for context engineering/inference/training/evaluation to build value-aligned agents. After contributing your private data and minting a DAT (Data Anchor Token), you can run AI inference on your data in a privacy-preserving way using LazAI. This workflow ensures your sensitive data remains secure and under your control, while still enabling powerful AI capabilities.
+
+> **Why Private Data Inference?**
+>
+> In many industries—such as healthcare, finance, and research—data privacy is critical. Traditional AI services often require uploading your data to third-party servers, risking exposure. LazAI enables you to run AI models on your own data without ever giving up control, leveraging secure computation and cryptographic settlement.
+
+---
+
+## Workflow Overview
+
+1. **Contribute Data:** Complete the [Data Contribution](./data-provider) workflow and obtain your File ID after minting DAT.
+2. **Setup Inference Server:** Deploy an inference server using the [Running Inference Server](./inference-server) guide.
+3. **Request Inference:** Use the LazAI client to send an inference request, referencing your File ID and providing settlement headers for secure access.
+
+---
+
+## Making Inference Queries
+
+<Tabs items={['Python', 'Node.js',  'Rust']}>
+  <Tabs.Tab>
+
+### Prerequisites
+
+Before making inference queries, ensure you have:
+
+1. **Completed Data Contribution:** You have contributed your private data and received a File ID
+2. **Inference Server Running:** An inference server is deployed and registered with LazAI
+3. **Wallet Setup:** A Web3 wallet with private key for authentication
+
+### Environment Setup
+
+#### Create Python Virtual Environment
+
+To avoid dependency conflicts and keep your environment clean, create and activate a Python virtual environment:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+#### Install Alith
+
+```shell
+python3 -m pip install alith -U
+```
+
+#### Set Environment Variables
+
+```shell
+export PRIVATE_KEY=<your wallet private key>
+```
+
+### Making Inference Queries
+
+```python
+from alith import Agent, LazAIClient
+ 
+# 1. Join the iDAO, register user wallet on LazAI and deposit fees (Only Once)
+LAZAI_IDAO_ADDRESS = "0xc3e98E8A9aACFc9ff7578C2F3BA48CA4477Ecf49" 
+client = LazAIClient()
+ 
+DEPOSIT_AMOUNT = 10000000  
+
+
+
+try:
+    address = client.get_user(client.wallet.address)
+    print("User already exists", address)
+
+except Exception:
+    print("User does not exist, adding user")
+    try:
+        client.add_user(DEPOSIT_AMOUNT)
+        client.deposit_inference(LAZAI_IDAO_ADDRESS, DEPOSIT_AMOUNT)
+        print(f"Successfully added user and deposited {DEPOSIT_AMOUNT}")
+    except Exception as e:
+        print("Error adding user or depositing:", e)
+
+ 
+# 2. Request the inference server with the settlement headers and DAT file id
+file_id = 10  # Use the File ID you received from the Data Contribution step
+url = client.get_inference_node(LAZAI_IDAO_ADDRESS)[1]
+print("url", url)
+
+# Check if the user has an account with the inference node
+try:
+    account = client.get_inference_account(client.wallet.address, LAZAI_IDAO_ADDRESS)
+    print("Inference account:", account)
+    if not account or account[0] != client.wallet.address:
+        print("Warning: User account not found with inference node. This may cause authentication errors.")
+except Exception as e:
+    print("Error checking inference account:", e)
+
+agent = Agent(
+    # Note: replace with your model here
+    model="deepseek/deepseek-r1-0528",
+    base_url=f"{url}/v1",
+    # Extra headers for settlement and DAT file anchoring
+    extra_headers=client.get_request_headers(LAZAI_IDAO_ADDRESS, file_id=file_id),
+)
+print(agent.prompt("summarize it"))
+```
+
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+
+### Project Setup
+
+```bash
+mkdir lazai-inference
+cd lazai-inference
+npm init -y
+```
+
+### Install Alith
+
+```bash
+npm i alith@latest
+```
+
+### Create TypeScript Configuration
+
+Create a file named `tsconfig.json` with the following content:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true
+  },
+  "ts-node": {
+    "esm": true
+  },
+  "include": ["*.ts"],
+  "exclude": ["node_modules"]
+}
+```
+
+### Set Environment Variables
+
+```bash
+export PRIVATE_KEY=<your wallet private key>
+```
+
+
+
+### Step 1: Request Inference via LazAI Client
+
+Create a file named `app.ts` with the following content:
+
+```typescript
+import { ChainConfig, Client } from "alith/lazai";
+import { Agent } from "alith";
+
+// Set up the private key for authentication
+process.env.PRIVATE_KEY = "<your wallet private key>";
+
+const node = "0xc3e98E8A9aACFc9ff7578C2F3BA48CA4477Ecf49"; // Replace with your own inference node address
+const client = new Client(ChainConfig.testnet());
+
+await client.getUser(client.getWallet().address);
+
+console.log(
+  "The inference account of user is",
+  await client.getInferenceAccount(client.getWallet().address, node)
+);
+
+const fileId = 10;
+const nodeInfo = await client.getInferenceNode(node);
+const url = nodeInfo.url;
+const agent = new Agent({
+  // OpenAI-compatible inference server URL
+  baseUrl: `${url}/v1`,
+  model: "deepseek/deepseek-r1-0528",
+  // Extra headers for settlement and DAT file anchoring
+  extraHeaders: await client.getRequestHeaders(node, BigInt(fileId)),
+});
+console.log(await agent.prompt("What is Alith?"));
+```
+
+### Step 2: Run the Application
+
+```bash
+npx tsx app.ts
+```
+
+  </Tabs.Tab>
+  <Tabs.Tab>
+
+### Coming Soon
+
+Rust support for private data inference will be available in future releases.
+
+  </Tabs.Tab>
+</Tabs>
+
+
+
+---
+
+## Security & Privacy
+
+- **Your data never leaves your control.** Inference is performed in a privacy-preserving environment, using cryptographic settlement and secure computation.
+- **Settlement headers** ensure only authorized users and nodes can access your data for inference.
+- **File ID** links your inference request to the specific data you contributed, maintaining a verifiable chain of custody.
+
+---
+
+## See Also
+
+- [Data Provider](./data-provider) — How to contribute your private data and obtain a File ID.
+- [Running Inference Server](./inference-server) — How to set up and deploy inference servers.
+- [Building on LazAI](./building-on-lazai) — Advanced integration and development guides. 
