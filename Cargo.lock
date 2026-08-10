@@ -309,7 +309,7 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror 2.0.17",
- "tiktoken-rs",
+ "tiktoken-rs 0.9.1",
  "tokenizers",
  "tracing",
 ]
@@ -7926,7 +7926,7 @@ dependencies = [
  "regex",
  "regex-syntax 0.8.5",
  "sha1collisiondetection",
- "thiserror 1.0.69",
+ "thiserror 2.0.17",
  "xxhash-rust",
 ]
 
@@ -8932,7 +8932,7 @@ dependencies = [
  "pulldown-cmark",
  "strum 0.27.1",
  "thiserror 2.0.17",
- "tiktoken-rs",
+ "tiktoken-rs 0.6.0",
 ]
 
 [[package]]
@@ -9017,6 +9017,21 @@ dependencies = [
  "fancy-regex",
  "lazy_static",
  "parking_lot",
+ "regex",
+ "rustc-hash 1.1.0",
+]
+
+[[package]]
+name = "tiktoken-rs"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3a19830747d9034cd9da43a60eaa8e552dfda7712424aebf187b7a60126bae0d"
+dependencies = [
+ "anyhow",
+ "base64 0.22.1",
+ "bstr",
+ "fancy-regex",
+ "lazy_static",
  "regex",
  "rustc-hash 1.1.0",
 ]
