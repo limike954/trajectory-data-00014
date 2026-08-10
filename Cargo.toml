@@ -122,7 +122,7 @@ byteorder = "1.5.0"
 minijinja = "2.11.0"
 paste = "1.0.15"
 tokenizers = "0.21.4"
-sentencepiece = "0.11.3"
+sentencepiece = "0.14.0"
 
 [workspace.package]
 version = "0.12.3"

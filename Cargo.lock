@@ -6641,6 +6641,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "prost"
+version = "0.14.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "528ac67416ff8646872a3c02cad9cc4ee5dc9f9540c9b10771855c95cb2e5ae1"
+dependencies = [
+ "bytes",
+ "prost-derive 0.14.4",
+]
+
+[[package]]
 name = "prost-build"
 version = "0.11.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6680,6 +6690,19 @@ name = "prost-derive"
 version = "0.13.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8a56d757972c98b346a9b766e3f02746cde6dd1cd1d1d563472929fdd74bec4d"
+dependencies = [
+ "anyhow",
+ "itertools 0.14.0",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.102",
+]
+
+[[package]]
+name = "prost-derive"
+version = "0.14.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b570b25f7617e43d59005d0990ccb79e950a423952cea19671b7a876da390adf"
 dependencies = [
  "anyhow",
  "itertools 0.14.0",
@@ -7872,24 +7895,24 @@ dependencies = [
 
 [[package]]
 name = "sentencepiece"
-version = "0.11.3"
+version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "286451da14703923eeb9d5e9d7717a15cbf236c037923fb7a6ff911ca45f4124"
+checksum = "199cd424616675812f71a43866e2fb6e4725538dd7cee7d537fea81c0d66c102"
 dependencies = [
  "libc",
  "num-derive",
  "num-traits",
- "prost 0.11.9",
- "prost-derive 0.11.9",
+ "prost 0.14.4",
+ "prost-derive 0.14.4",
  "sentencepiece-sys",
- "thiserror 1.0.69",
+ "thiserror 2.0.17",
 ]
 
 [[package]]
 name = "sentencepiece-sys"
-version = "0.11.3"
+version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a721500103a50c284cd3908cca6c435fcc6a260a1cead830a040f904a89234fb"
+checksum = "1f4f7b039e2b80f69283f56211f9457ea3f4a8d3045b9ba4282326b446fa3a9a"
 dependencies = [
  "cc",
  "cmake",
@@ -7926,7 +7949,7 @@ dependencies = [
  "regex",
  "regex-syntax 0.8.5",
  "sha1collisiondetection",
- "thiserror 1.0.69",
+ "thiserror 2.0.17",
  "xxhash-rust",
 ]
 
