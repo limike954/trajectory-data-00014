@@ -1,0 +1,67 @@
+[build-system]
+requires = ["maturin>=1.8,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "alith"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+dynamic = ["version"]
+description = "Alith Python SDK"
+license = { text = "Apache-2.0" }
+dependencies = [
+    "pydantic",
+    "pydantic_config",
+    "requests",
+    "web3<8.0.0,>=7.6.0",
+    "rsa",
+    "python-gnupg",
+    "aiohttp",
+    "flask",
+    "uvicorn",
+    "fastapi",
+    "numpy",
+    "dstack-sdk<0.3.0,>=0.2.1"
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "black",
+    "isort",
+]
+
+# Optional dependencies for the Data Evaluation feature used by alith.data.evaluator.text
+evaluation = [
+    "torch",
+    "transformers",
+    "scikit-learn",
+    "pyspellchecker",
+]
+
+# Optional dependencies for multi-modal embeddings (CLIP)
+multimodal = [
+    "torch",
+    "torchvision",
+    "pillow",
+    "clip @ git+https://github.com/openai/CLIP.git",
+    "faiss-cpu",
+]
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+module-name = "alith._alith"
+python-source = "."
+
+[tool.ruff.lint]
+ignore = ["F403", "F405"]
+
+[tool.pytest.ini_options]
+# Exclude crypto test by default (requires system gpg binary)
+# To run crypto test: pytest test/data/crypto/
+testpaths = ["test"]
+norecursedirs = ["test/data/crypto"]

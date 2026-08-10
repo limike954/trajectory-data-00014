@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - 'main'
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  RUST_VERSION: 1.87
+  MACOSX_DEPLOYMENT_TARGET: '12.0'
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential clang llvm pkg-config nettle-dev ||
+          sudo apt-get install -y cmake build-essential clang llvm pkg-config libnettle-dev
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+          components: clippy, rustfmt
+      - uses: taiki-e/install-action@nextest
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cargo fmt
+        run: cargo fmt --all -- --check
+      - name: Cargo clippy
+        run: cargo clippy --workspace -- -D warnings
+
+  test:
+    name: Test on ${{ matrix.build }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - build: linux-amd64
+            os: ubuntu-22.04
+          - build: linux-arm64
+            os: ubuntu-22.04-arm
+          - build: macos-amd64
+            os: macos-13
+          - build: macos-arm64
+            os: macos-14
+          - build: windows-amd64
+            os: windows-latest
+    env:
+      TARGET: ${{ matrix.target }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies (Ubuntu)
+        if: matrix.os == 'ubuntu-22.04' || matrix.os == 'ubuntu-22.04-arm'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential clang llvm pkg-config nettle-dev ||
+          sudo apt-get install -y cmake build-essential clang llvm pkg-config libnettle-dev
+
+      - name: Install build dependencies (macOS)
+        if: matrix.os == 'macos-13' || matrix.os == 'macos-14'
+        run: |
+          brew install cmake nettle
+
+      - name: Install build dependencies (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install -y cmake pkgconfiglite
+          refreshenv
+
+          # Install nettle via vcpkg (MSVC-compatible)
+          git clone https://github.com/Microsoft/vcpkg.git C:\vcpkg
+          C:\vcpkg\bootstrap-vcpkg.bat
+          C:\vcpkg\vcpkg install nettle:x64-windows
+          
+          # Set environment variables for nettle-sys
+          echo "VCPKG_ROOT=C:\vcpkg" >> $env:GITHUB_ENV
+          echo "NETTLE_STATIC=1" >> $env:GITHUB_ENV
+          echo "PKG_CONFIG_PATH=C:\vcpkg\installed\x64-windows\lib\pkgconfig" >> $env:GITHUB_ENV
+          
+          # Add vcpkg directories to PATH for libraries and DLLs
+          echo "C:\vcpkg\installed\x64-windows\bin" >> $env:GITHUB_PATH
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+          components: clippy, rustfmt
+      - uses: taiki-e/install-action@nextest
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Set MSVC toolchain for Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          rustup default stable-x86_64-pc-windows-msvc
+          rustup target add x86_64-pc-windows-msvc
+
+      - name: Run tests
+        run: cargo nextest run --workspace --exclude alith-python-sdk --exclude alith-node-sdk

@@ -1,0 +1,24 @@
+/target
+/dist
+.DS_store
+.vscode
+llm_logs
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Next.js
+next-env.d.ts
+
+# DEV
+scripts/dev_*
+# Node log
+node.log
+node_modules
+.idea/
