@@ -73,7 +73,7 @@ sysinfo = { version = "0.35.2", default-features = false, features = [
 ] }
 backoff = { version = "0.4.0", features = ["tokio"] }
 secrecy = "0.10.3"
-lopdf = "0.36.0"
+lopdf = "0.42.0"
 readability = { version = "0.3.0", default-features = false }
 html_to_markdown = "0.1.0"
 hex-literal = "1.0.0"
