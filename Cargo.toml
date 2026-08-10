@@ -65,7 +65,7 @@ html2text = "0.15.3"
 rayon = "1.11.0"
 unicode-properties = "0.1.3"
 unicode-segmentation = "1.11.0"
-text-splitter = { version = "0.26.0", features = ["markdown", "tiktoken-rs"] }
+text-splitter = { version = "0.29.3", features = ["markdown", "tiktoken-rs"] }
 rsa = "0.9.8"
 sequoia-openpgp = "2.0.0"
 sysinfo = { version = "0.35.2", default-features = false, features = [

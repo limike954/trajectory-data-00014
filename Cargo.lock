@@ -309,7 +309,7 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror 2.0.17",
- "tiktoken-rs",
+ "tiktoken-rs 0.6.0",
  "tokenizers",
  "tracing",
 ]
@@ -5276,9 +5276,9 @@ dependencies = [
 
 [[package]]
 name = "memchr"
-version = "2.7.5"
+version = "2.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "32a282da65faaf38286cf3be983213fcf1d2e2a58700e808f83f4ea9a4804bc0"
+checksum = "cf8baf1c55e62ffcace7a9f06f4bd9cd3f0c4beb022d3b367256b91b87513d98"
 
 [[package]]
 name = "memmap2"
@@ -7926,7 +7926,7 @@ dependencies = [
  "regex",
  "regex-syntax 0.8.5",
  "sha1collisiondetection",
- "thiserror 1.0.69",
+ "thiserror 2.0.17",
  "xxhash-rust",
 ]
 
@@ -8918,9 +8918,9 @@ dependencies = [
 
 [[package]]
 name = "text-splitter"
-version = "0.26.0"
+version = "0.29.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ef565c233dd6cc1a2c31a89076800f091d84b8bdae32b5a23956dde2692e00a2"
+checksum = "2979ebb41243f6c8adc1c1adb76f35fe4e59ba2bc07f7863bb56bcc838798bf4"
 dependencies = [
  "ahash",
  "auto_enums",
@@ -8932,7 +8932,7 @@ dependencies = [
  "pulldown-cmark",
  "strum 0.27.1",
  "thiserror 2.0.17",
- "tiktoken-rs",
+ "tiktoken-rs 0.9.1",
 ]
 
 [[package]]
@@ -9017,6 +9017,21 @@ dependencies = [
  "fancy-regex",
  "lazy_static",
  "parking_lot",
+ "regex",
+ "rustc-hash 1.1.0",
+]
+
+[[package]]
+name = "tiktoken-rs"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3a19830747d9034cd9da43a60eaa8e552dfda7712424aebf187b7a60126bae0d"
+dependencies = [
+ "anyhow",
+ "base64 0.22.1",
+ "bstr",
+ "fancy-regex",
+ "lazy_static",
  "regex",
  "rustc-hash 1.1.0",
 ]
