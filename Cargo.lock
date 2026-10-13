@@ -5607,9 +5607,9 @@ dependencies = [
 
 [[package]]
 name = "napi-build"
-version = "2.2.3"
+version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dcae8ad5609d14afb3a3b91dee88c757016261b151e9dcecabf1b2a31a6cab14"
+checksum = "60fdf9b392c50e7c4170fa633bd909490ed7835cea4c046776d1a4dd8d2ae0ab"
 
 [[package]]
 name = "napi-derive"
@@ -7926,7 +7926,7 @@ dependencies = [
  "regex",
  "regex-syntax 0.8.5",
  "sha1collisiondetection",
- "thiserror 1.0.69",
+ "thiserror 2.0.17",
  "xxhash-rust",
 ]
 
